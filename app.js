@@ -19,6 +19,10 @@ const IMAGE_QUALITY = 0.82; // JPEG quality
 
 let revealObserver = null;
 let myDeviceId = null;
+let currentEditFriendId = null;
+let currentEditMemoryId = null;
+let allFriendsData = [];
+let allMemoriesData = [];
 try {
   myDeviceId = localStorage.getItem('ssc_device_id');
   if (!myDeviceId) {
@@ -153,7 +157,12 @@ function createFriendCard(friend) {
           <div class="friend__name">${name}</div>
           ${nickRaw ? `<div class="friend__nick">(${nick})</div>` : ''}
         </div>
-        ${canDelete ? `<button class="remove-btn" type="button" data-remove-friend="${id}">Remove</button>` : ''}
+        ${canDelete ? `
+          <div class="card-actions">
+            <button class="edit-btn" type="button" data-edit-friend="${id}">Edit</button>
+            <button class="remove-btn" type="button" data-remove-friend="${id}">Remove</button>
+          </div>
+        ` : ''}
       </div>
       <div class="friend__meta">Roll No: ${roll}</div>
       ${quoteRaw ? `<p class="friend__quote">“${quote.replace(/^“|”$/g, "")}”</p>` : ``}
@@ -189,7 +198,7 @@ function initPhotoViewer() {
     const cardEl = t.closest?.(".friend, .memory");
     if (!cardEl) return;
     
-    if (t.closest?.("[data-remove-friend], [data-remove-memory]")) return;
+    if (t.closest?.("[data-remove-friend], [data-remove-memory], [data-edit-friend], [data-edit-memory]")) return;
 
     let src = "";
     let titleText = "";
@@ -254,7 +263,12 @@ function createMemoryCard(memory) {
     ${image ? `<div class="memory__photo" aria-hidden="true" style="background-image: url('${image}')"></div>` : ''}
     <div class="memory__header">
       <h3>${title}</h3>
-      ${canDelete ? `<button class="remove-btn" type="button" data-remove-memory="${id}">Remove</button>` : ''}
+      ${canDelete ? `
+        <div class="card-actions">
+          <button class="edit-btn" type="button" data-edit-memory="${id}">Edit</button>
+          <button class="remove-btn" type="button" data-remove-memory="${id}">Remove</button>
+        </div>
+      ` : ''}
     </div>
     <p>${text}</p>
     <div class="memory__by">— ${by}</div>
@@ -279,6 +293,7 @@ async function renderFriends() {
       return;
     }
 
+    allFriendsData = friends || [];
     const sortedFriends = (friends || []).slice().sort((a, b) => {
       const ar = parseInt(String(a?.roll ?? ""), 10);
       const br = parseInt(String(b?.roll ?? ""), 10);
@@ -315,6 +330,7 @@ async function renderMemories() {
       return;
     }
 
+    allMemoriesData = memories || [];
     (memories || []).forEach((m) => {
       const card = createMemoryCard(m);
       listEl.insertBefore(card, plusBtn);
@@ -404,14 +420,19 @@ function initFriendForm() {
     try {
       const fd = new FormData(form);
       const file = fileInput.files?.[0];
-      if (!file) throw new Error("Please select a photo.");
-
-      const blob = await imageFileToCompressedBlob(file, {
-        maxDim: IMAGE_MAX_DIM,
-        quality: IMAGE_QUALITY,
-      });
-
-      const imageUrl = await uploadImageToSupabase(blob, 'friends');
+      let imageUrl = null;
+      if (file) {
+        const blob = await imageFileToCompressedBlob(file, {
+          maxDim: IMAGE_MAX_DIM,
+          quality: IMAGE_QUALITY,
+        });
+        imageUrl = await uploadImageToSupabase(blob, 'friends');
+      } else if (currentEditFriendId) {
+        const existing = allFriendsData.find(f => f.id === currentEditFriendId);
+        imageUrl = existing ? existing.image_url : null;
+      } else {
+        throw new Error("Please select a photo.");
+      }
 
       const tags = String(fd.get("tags") || "")
         .split(",")
@@ -419,22 +440,33 @@ function initFriendForm() {
         .filter(Boolean)
         .slice(0, 8);
 
-      const friend = {
-        id: uid(),
+      const friendData = {
         name: String(fd.get("name") || "").trim(),
         roll: String(fd.get("roll") || "").trim(),
         nick: String(fd.get("nick") || "").trim(),
         quote: String(fd.get("quote") || "").trim(),
         tags,
         image_url: imageUrl,
-        device_id: myDeviceId,
-        created_at: Date.now(),
       };
 
-      const { error } = await supabaseClient.from('ssc_friends').insert([friend]);
-      if (error) throw error;
+      if (currentEditFriendId) {
+        const { error } = await supabaseClient.from('ssc_friends')
+          .update(friendData)
+          .eq('id', currentEditFriendId)
+          .eq('device_id', myDeviceId);
+        if (error) throw error;
+      } else {
+        friendData.id = uid();
+        friendData.device_id = myDeviceId;
+        friendData.created_at = Date.now();
+        const { error } = await supabaseClient.from('ssc_friends').insert([friendData]);
+        if (error) throw error;
+      }
 
+      currentEditFriendId = null;
       form.reset();
+      document.querySelector("#friendModal .modal__title").textContent = "Add a Friend";
+      document.getElementById("friendPhoto").required = true;
       closeDialog("friendModal");
       
       // Re-fetch
@@ -476,22 +508,35 @@ function initMemoryForm() {
           quality: IMAGE_QUALITY,
         });
         imageUrl = await uploadImageToSupabase(blob, 'memories');
+      } else if (currentEditMemoryId) {
+        const existing = allMemoriesData.find(m => m.id === currentEditMemoryId);
+        imageUrl = existing ? existing.image_url : null;
       }
-
-      const memory = {
-        id: uid(),
+      const memoryData = {
         title: String(fd.get("title") || "").trim(),
         text: String(fd.get("text") || "").trim(),
         by_name: String(fd.get("by") || "").trim(),
-        image_url: imageUrl,
-        device_id: myDeviceId,
-        created_at: Date.now(),
       };
+      if (imageUrl) memoryData.image_url = imageUrl;
 
-      const { error } = await supabaseClient.from('ssc_memories').insert([memory]);
-      if (error) throw error;
+      if (currentEditMemoryId) {
+         const { error } = await supabaseClient.from('ssc_memories')
+           .update(memoryData)
+           .eq('id', currentEditMemoryId)
+           .eq('device_id', myDeviceId);
+         if (error) throw error;
+      } else {
+         memoryData.id = uid();
+         memoryData.device_id = myDeviceId;
+         memoryData.created_at = Date.now();
+         if (!memoryData.image_url) memoryData.image_url = null;
+         const { error } = await supabaseClient.from('ssc_memories').insert([memoryData]);
+         if (error) throw error;
+      }
 
+      currentEditMemoryId = null;
       form.reset();
+      document.querySelector("#memoryModal .modal__title").textContent = "Add a Memory";
       closeDialog("memoryModal");
       
       await renderMemories();
@@ -505,10 +550,61 @@ function initMemoryForm() {
   });
 }
 
-function initRemoveHandlers() {
+function initCardActions() {
   document.addEventListener("click", async (e) => {
     const t = e.target;
     if (!(t instanceof HTMLElement)) return;
+
+    const editFriendId = t.getAttribute("data-edit-friend");
+    if (editFriendId) {
+      const friend = allFriendsData.find(f => f.id === editFriendId);
+      if (friend) {
+        currentEditFriendId = friend.id;
+        const form = document.getElementById("addFriendForm");
+        form.elements["name"].value = friend.name || "";
+        form.elements["roll"].value = friend.roll || "";
+        form.elements["nick"].value = friend.nick || "";
+        form.elements["quote"].value = friend.quote || "";
+        
+        let tagsRaw = [];
+        if (Array.isArray(friend.tags)) {
+            tagsRaw = friend.tags;
+        } else if (typeof friend.tags === 'string') {
+            try { tagsRaw = JSON.parse(friend.tags); } catch { tagsRaw = [friend.tags]; }
+        }
+        form.elements["tags"].value = tagsRaw.join(", ");
+        
+        const preview = document.getElementById("friendPreviewBox");
+        if (friend.image_url) {
+          preview.style.backgroundImage = `url("${friend.image_url}")`;
+          preview.classList.add("upload-preview--has");
+        } else {
+          preview.style.backgroundImage = "";
+          preview.classList.remove("upload-preview--has");
+        }
+        document.getElementById("friendPhoto").required = false;
+
+        document.querySelector("#friendModal .modal__title").textContent = "Edit Friend";
+        openDialog("friendModal");
+      }
+      return;
+    }
+
+    const editMemoryId = t.getAttribute("data-edit-memory");
+    if (editMemoryId) {
+      const memory = allMemoriesData.find(m => m.id === editMemoryId);
+      if (memory) {
+        currentEditMemoryId = memory.id;
+        const form = document.getElementById("addMemoryForm");
+        form.elements["title"].value = memory.title || "";
+        form.elements["text"].value = memory.text || "";
+        form.elements["by"].value = memory.by_name || memory.by || "";
+        
+        document.querySelector("#memoryModal .modal__title").textContent = "Edit Memory";
+        openDialog("memoryModal");
+      }
+      return;
+    }
 
     const friendId = t.getAttribute("data-remove-friend");
     if (friendId) {
@@ -552,8 +648,30 @@ function initModals() {
   const openFriend = document.getElementById("openAddFriend");
   const openMemory = document.getElementById("openAddMemory");
 
-  openFriend?.addEventListener("click", () => openDialog("friendModal"));
-  openMemory?.addEventListener("click", () => openDialog("memoryModal"));
+  openFriend?.addEventListener("click", () => {
+    currentEditFriendId = null;
+    const form = document.getElementById("addFriendForm");
+    form.reset();
+    const preview = document.getElementById("friendPreviewBox");
+    if (preview) {
+      preview.style.backgroundImage = "";
+      preview.classList.remove("upload-preview--has");
+    }
+    const photoInput = document.getElementById("friendPhoto");
+    if (photoInput) photoInput.required = true;
+    const title = document.querySelector("#friendModal .modal__title");
+    if (title) title.textContent = "Add a Friend";
+    openDialog("friendModal");
+  });
+
+  openMemory?.addEventListener("click", () => {
+    currentEditMemoryId = null;
+    const form = document.getElementById("addMemoryForm");
+    form.reset();
+    const title = document.querySelector("#memoryModal .modal__title");
+    if (title) title.textContent = "Add a Memory";
+    openDialog("memoryModal");
+  });
 
   document.addEventListener("click", (e) => {
     const t = e.target;
@@ -582,7 +700,7 @@ function init() {
     initModals(); // Initialize modals FIRST so they work even if DB fails
     initFriendForm();
     initMemoryForm();
-    initRemoveHandlers();
+    initCardActions();
     initPhotoViewer();
     initMiniCards();
     
