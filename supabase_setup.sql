@@ -28,6 +28,8 @@ DROP POLICY IF EXISTS "Enable read access for all users" ON ssc_friends;
 CREATE POLICY "Enable read access for all users" ON ssc_friends FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Enable insert access for all users" ON ssc_friends;
 CREATE POLICY "Enable insert access for all users" ON ssc_friends FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Enable update for creator" ON ssc_friends;
+CREATE POLICY "Enable update for creator" ON ssc_friends FOR UPDATE USING (true);
 DROP POLICY IF EXISTS "Enable delete for creator" ON ssc_friends;
 CREATE POLICY "Enable delete for creator" ON ssc_friends FOR DELETE USING (true);
 
@@ -37,6 +39,8 @@ DROP POLICY IF EXISTS "Enable read access for all users" ON ssc_memories;
 CREATE POLICY "Enable read access for all users" ON ssc_memories FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Enable insert access for all users" ON ssc_memories;
 CREATE POLICY "Enable insert access for all users" ON ssc_memories FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Enable update for creator" ON ssc_memories;
+CREATE POLICY "Enable update for creator" ON ssc_memories FOR UPDATE USING (true);
 DROP POLICY IF EXISTS "Enable delete for creator" ON ssc_memories;
 CREATE POLICY "Enable delete for creator" ON ssc_memories FOR DELETE USING (true);
 
