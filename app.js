@@ -450,11 +450,13 @@ function initFriendForm() {
       };
 
       if (currentEditFriendId) {
-        const { error } = await supabaseClient.from('ssc_friends')
+        const { data, error } = await supabaseClient.from('ssc_friends')
           .update(friendData)
           .eq('id', currentEditFriendId)
-          .eq('device_id', myDeviceId);
+          .eq('device_id', myDeviceId)
+          .select();
         if (error) throw error;
+        if (!data || data.length === 0) throw new Error("Could not update. You can only edit your own entries.");
       } else {
         friendData.id = uid();
         friendData.device_id = myDeviceId;
@@ -520,11 +522,13 @@ function initMemoryForm() {
       if (imageUrl) memoryData.image_url = imageUrl;
 
       if (currentEditMemoryId) {
-         const { error } = await supabaseClient.from('ssc_memories')
+         const { data, error } = await supabaseClient.from('ssc_memories')
            .update(memoryData)
            .eq('id', currentEditMemoryId)
-           .eq('device_id', myDeviceId);
+           .eq('device_id', myDeviceId)
+           .select();
          if (error) throw error;
+         if (!data || data.length === 0) throw new Error("Could not update. You can only edit your own memories.");
       } else {
          memoryData.id = uid();
          memoryData.device_id = myDeviceId;
