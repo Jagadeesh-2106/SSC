@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="./logo.avif">
+  <title>SSC 10th Memories</title>
+  <meta name="description"
+    content="A static HTML + CSS only memories portfolio for SSC 10th class friends: photos, notes, and advice." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <!--
+      HTML + CSS ONLY project.
+      Real “upload/save” isn't possible without JavaScript or a backend.
+      This site includes:
+      - A ready-to-copy Friend Card template (duplicate in the Photos section)
+      - A form for collecting details (can be printed or used as a guide)
+    -->
+
+  <!-- Theme toggle (CSS-only) -->
+  <input class="theme-toggle" type="checkbox" id="theme" aria-label="Toggle dark mode" />
+
+  <div class="app">
+    <header class="header" id="top">
+      <nav class="nav">
+        <a class="brand" href="#top" aria-label="Go to top">
+          <span class="brand__logo" aria-hidden="true"><img src="./logo.avif" alt="" height="34px" width="34px"
+              style="border-radius: 30%;"></span>
+          <span class="brand__text">
+            <span class="brand__title">SSC 2020-2021</span>
+            <span class="brand__sub">Memories</span>
+          </span>
+        </a>
+
+        <input class="nav__toggle" type="checkbox" id="menu" aria-label="Open menu" />
+        <label class="nav__hamburger" for="menu" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </label>
+
+        <div class="nav__links">
+          <a href="#main">Main</a>
+          <a href="#about">About</a>
+          <a href="#photos">Photos</a>
+          <a href="#memories">Memories</a>
+        </div>
+
+        <label class="theme-switch" for="theme">
+          <span class="theme-switch__icon" aria-hidden="true">☀</span>
+          <span class="theme-switch__label">Light/Dark</span>
+          <span class="theme-switch__icon" aria-hidden="true">☾</span>
+        </label>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="main">
+        <div class="hero__grid">
+          <div class="hero__copy">
+            <p class="badge">
+              <span class="badge__dot" aria-hidden="true"></span>
+              Class of Memories
+            </p>
+            <h1>
+              A beautiful page for our
+              <span class="gradient">10th class friends</span>
+              - photos, notes, advice.
+            </h1>
+            <p class="lead">
+              Fill it with our <strong>Memories</strong>, includes our laughs, cries, and everything in between.
+            </p>
+
+            <div class="hero__cta">
+              <a class="btn btn--primary" href="#photos">See Photos</a>
+              <a class="btn btn--ghost" href="#photos">Add a Friend</a>
+            </div>
+
+            <div class="stats" role="list" aria-label="Quick highlights">
+              <div class="stat" role="listitem">
+                <div class="stat__k">10th</div>
+                <div class="stat__v">Best days</div>
+              </div>
+              <div class="stat" role="listitem">
+                <div class="stat__k">∞</div>
+                <div class="stat__v">Memories</div>
+              </div>
+              <div class="stat" role="listitem">
+                <div class="stat__k">100%</div>
+                <div class="stat__v">Pure & innocent</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__media" aria-label="Decorative gallery">
+            <div class="float-cards">
+              <article class="mini-card mini-card--a">
+                <div class="mini-card__img" aria-hidden="true">
+                  <img src="./school-1.jpeg" alt="" height="72px" width="72px">
+                </div>
+                <div class="mini-card__body">
+                  <div class="mini-card__name">We Met Here</div>
+                  <div class="mini-card__meta">Where our journey began</div>
+                </div>
+              </article>
+              <article class="mini-card mini-card--b">
+                <div class="mini-card__img" aria-hidden="true">
+                  <img src="school-2.jpeg" alt="" height="72px" width="72px">
+                </div>
+                <div class="mini-card__body">
+                  <div class="mini-card__name">We played Here</div>
+                  <div class="mini-card__meta">The ground that saw our endless laughs</div>
+                </div>
+              </article>
+              <article class="mini-card mini-card--c">
+                <div class="mini-card__img" aria-hidden="true">
+                  <img src="classpic.jpeg" alt="" height="72px" width="72px">
+                </div>
+                <div class="mini-card__body">
+                  <div class="mini-card__name">We Learned Here</div>
+                  <div class="mini-card__meta">The walls that heard all our secrets</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="music-card" id="song">
+              <div class="music-card__top">
+                <div>
+                  <div class="music-card__title">Class Song</div>
+                  <div class="music-card__sub">Play your memories</div>
+                </div>
+                <div class="equalizer" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <audio controls autoplay loop controlsList="nodownload">
+                <!-- Put your song file in the same folder and rename it as class-song.mp3 -->
+                <source src="./ambient.mp3" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              <p class="hint">
+                Tip: Play your memories with this song.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="section__head">
+          <h2>About the Class</h2>
+          <p>10th Class of 2020-2021, English Medium, ZPHS School, Therlam</p>
+        </div>
+
+        <div class="about-grid">
+          <article class="card">
+            <h3>Our vibe</h3>
+            <p>
+              Friends, fun, small fights, big laughs — and the best “last bench” stories.
+            </p>
+          </article>
+          <article class="card">
+            <h3>What this site is</h3>
+            <p>
+              A single page to <span class="gradient">Gather</span> all of our photos, notes, memories, and advice.</strong>
+            </p>
+          </article>
+          <article class="card">
+            <h3>How to use</h3>
+            <p>
+              Insert your memories.share your Experiance.Keep in touch with your friends.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="photos">
+        <div class="section__head">
+          <h2>Photos</h2>
+          <p>
+            Let take attendance of our friends.fill it with your roll numbers.
+          </p>
+        </div>
+
+        <div class="friends" id="friendsList" aria-label="Friends list">
+          <article class="friend" id="friend-01">
+            <div class="friend__photo friend__photo--1" role="img" aria-label="Friend photo placeholder"></div>
+            <div class="friend__body">
+              <div class="friend__name">Jagadeesh</div>
+              <div class="friend__nick">(Jaga)</div>
+              <div class="friend__meta">Roll No: 14</div>
+              <p class="friend__quote">“We’ll remember these days forever.”</p>
+              <div class="tags" aria-label="Highlights">
+                <span class="tag">Captain</span>
+                <span class="tag">Math</span>
+                <span class="tag">Friendly</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Add Friend PLUS card (opens popup) -->
+          <button class="plus-card" id="openAddFriend" type="button" aria-label="Add friend">
+            <span class="plus-card__icon" aria-hidden="true">＋</span>
+            <span class="plus-card__text">Add friend</span>
+          </button>
+        </div>
+
+        <details class="howto">
+          <summary>How To Save</summary>
+          <div class="howto__body">
+            <ol>
+              <li>
+                Use the <strong class="gradient">Add a Friend</strong> card
+              </li>
+              <li>
+                Fill the form with your name, roll number, nickname, quote,tags and photo. <strong>Submit</strong> it.
+              </li>
+              <li>
+                Make visible to everyone.
+              </li>
+            </ol>
+          </div>
+        </details>
+      </section>
+
+      <section class="section" id="memories">
+        <div class="section__head">
+          <h2>Memories Wall</h2>
+          <p>
+            Notes, advice, and funny moments. Add more using the last card.
+          </p>
+        </div>
+
+        <div class="memories" id="memoriesList">
+          <article class="memory memory--a">
+            <h3>Best moment</h3>
+            <p>Annual day practice + everyone laughing when the music stopped.</p>
+            <div class="memory__by">— Someone</div>
+          </article>
+
+          <!-- Add Memory PLUS card (opens popup) -->
+          <button class="plus-card plus-card--memory" id="openAddMemory" type="button" aria-label="Add memory">
+            <span class="plus-card__icon" aria-hidden="true">＋</span>
+            <span class="plus-card__text">Add memory</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__title">SSC 10th Memories</div>
+          <p class="footer__text">
+            Made for keep in touch with our friends.
+          </p>
+        </div>
+        <div class="footer__links">
+          <a href="#main">Main</a>
+          <a href="#photos">Photos</a>
+          <a href="#memories">Memories</a>
+          <a href="#song">Song</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span aria-label="Year">2026</span> • Jaggu</span>
+        <span class="sep" aria-hidden="true">•</span>
+        <span>Made for friends</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Popups -->
+  <dialog class="modal" id="friendModal" aria-label="Add friend popup">
+    <form class="modal__card" id="addFriendForm" method="dialog" autocomplete="off">
+      <div class="modal__head">
+        <div>
+          <div class="modal__title">Add a Friend</div>
+          <div class="modal__sub">Upload photo + name + roll number</div>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal="friendModal">Close</button>
+      </div>
+
+      <div class="modal__preview" id="friendPreview">
+        <div class="upload-preview upload-preview--modal" id="friendPreviewBox">
+          <div class="upload-preview__icon" aria-hidden="true">＋</div>
+          <div class="upload-preview__text">Choose photo</div>
+        </div>
+      </div>
+
+      <div class="mini-form__row">
+        <label>
+          <span>Name</span>
+          <input name="name" type="text" placeholder="Friend name" required />
+        </label>
+        <label>
+          <span>Roll</span>
+          <input name="roll" type="text" placeholder="e.g. 17" inputmode="numeric" required />
+        </label>
+      </div>
+      <label>
+        <span>Nickname (optional)</span>
+        <input name="nick" type="text" placeholder="Nickname" />
+      </label>
+      <label>
+        <span>Quote (optional)</span>
+        <input name="quote" type="text" placeholder="One line memory..." />
+      </label>
+      <label>
+        <span>Tags (comma separated)</span>
+        <input name="tags" type="text" placeholder="e.g. cricket, topper, funny" />
+      </label>
+      <label>
+        <span>Photo</span>
+        <input name="photo" id="friendPhoto" type="file" accept="image/*" required />
+      </label>
+
+      <div class="mini-form__actions">
+        <button class="btn btn--primary" type="submit">Save</button>
+        <button class="btn btn--ghost" type="reset">Clear</button>
+      </div>
+      <p class="hint">Saved locally by default. Shared mode needs a cloud config (optional).</p>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="memoryModal" aria-label="Add memory popup">
+    <form class="modal__card modal__card--compact" id="addMemoryForm" method="dialog" autocomplete="off">
+      <div class="modal__head">
+        <div>
+          <div class="modal__title">Add a Memory</div>
+          <div class="modal__sub">Write memory + add a photo</div>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal="memoryModal">Close</button>
+      </div>
+
+      <label>
+        <span>Title</span>
+        <input name="title" type="text" placeholder="e.g. Farewell day" required />
+      </label>
+      <label>
+        <span>Memory</span>
+        <textarea name="text" rows="3" placeholder="Write your memory..." required></textarea>
+      </label>
+      <label>
+        <span>By (name/roll)</span>
+        <input name="by" type="text" placeholder="Your name or roll no." />
+      </label>
+      <label>
+        <span>Photo</span>
+        <input name="photo" id="memoryPhoto" type="file" accept="image/*" />
+      </label>
+
+      <div class="mini-form__actions">
+        <button class="btn btn--primary" type="submit">Save</button>
+        <button class="btn btn--ghost" type="reset">Clear</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Photo viewer (click any friend card photo) -->
+  <dialog class="modal" id="photoViewer" aria-label="Photo viewer">
+    <div class="modal__card modal__card--compact viewer">
+      <div class="modal__head">
+        <div>
+          <div class="modal__title" id="viewerTitle">Photo</div>
+          <div class="modal__sub" id="viewerSub"></div>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal="photoViewer">Close</button>
+      </div>
+      <img class="viewer__img" id="viewerImg" alt="Full photo" />
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./app.js" defer></script>
+</body>
+
+</html>
