@@ -932,6 +932,7 @@ h2 {
   margin-bottom: 14px;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 }
 
 /* Reduce size for "Add Memory" card */
