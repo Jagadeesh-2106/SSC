@@ -44,6 +44,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -56,6 +57,7 @@ body {
     radial-gradient(900px 600px at 60% 95%, rgba(255, 207, 92, 0.14), transparent 58%),
     var(--bg);
   color: var(--text);
+  overflow-x: hidden;
 }
 
 a {
@@ -371,7 +373,7 @@ h1 {
 
 .float-cards {
   position: relative;
-  height: 210px;
+  height: 250px;
 }
 
 .mini-card {
@@ -388,6 +390,12 @@ h1 {
   padding: 10px;
   backdrop-filter: blur(10px);
   animation: floaty 5.6s ease-in-out infinite;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.mini-card.is-front {
+  z-index: 10;
 }
 
 .theme-toggle:checked+.app .mini-card {
