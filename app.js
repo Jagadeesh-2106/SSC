@@ -538,6 +538,16 @@ function initRemoveHandlers() {
   });
 }
 
+function initMiniCards() {
+  const cards = document.querySelectorAll('.mini-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      cards.forEach(c => c.classList.remove('is-front'));
+      card.classList.add('is-front');
+    });
+  });
+}
+
 function initModals() {
   const openFriend = document.getElementById("openAddFriend");
   const openMemory = document.getElementById("openAddMemory");
@@ -574,6 +584,7 @@ function init() {
     initMemoryForm();
     initRemoveHandlers();
     initPhotoViewer();
+    initMiniCards();
     
     // Then render data
     renderFriends();
