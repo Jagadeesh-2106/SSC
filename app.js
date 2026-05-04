@@ -186,26 +186,47 @@ function initPhotoViewer() {
     const t = e.target;
     if (!(t instanceof HTMLElement)) return;
 
-    const friendEl = t.closest?.(".friend");
-    if (!friendEl) return;
+    const cardEl = t.closest?.(".friend, .memory");
+    if (!cardEl) return;
     
-    if (t.closest?.("[data-remove-friend]")) return;
+    if (t.closest?.("[data-remove-friend], [data-remove-memory]")) return;
 
-    const photoData = friendEl.getAttribute("data-photo") || "";
-    const name = (friendEl.getAttribute("data-name") || "").trim();
-    const roll = (friendEl.getAttribute("data-roll") || "").trim();
+    let src = "";
+    let titleText = "";
+    let subText = "";
 
-    let src = photoData;
-    if (!src) {
-      const photoBox = friendEl.querySelector(".friend__photo");
-      const bg = photoBox ? getComputedStyle(photoBox).backgroundImage : "";
+    if (cardEl.classList.contains("friend")) {
+      const photoData = cardEl.getAttribute("data-photo") || "";
+      const name = (cardEl.getAttribute("data-name") || "").trim();
+      const roll = (cardEl.getAttribute("data-roll") || "").trim();
+
+      src = photoData;
+      if (!src) {
+        const photoBox = cardEl.querySelector(".friend__photo");
+        const bg = photoBox ? getComputedStyle(photoBox).backgroundImage : "";
+        src = extractUrlFromBackgroundImage(bg);
+      }
+      titleText = name ? name : "Photo";
+      subText = roll ? `Roll No: ${roll}` : "";
+    } else if (cardEl.classList.contains("memory")) {
+      const photoBox = cardEl.querySelector(".memory__photo");
+      if (!photoBox) return; // no photo to view
+      
+      const bg = photoBox.style.backgroundImage;
       src = extractUrlFromBackgroundImage(bg);
+      
+      const h3 = cardEl.querySelector("h3");
+      const byEl = cardEl.querySelector(".memory__by");
+      
+      titleText = h3 ? h3.textContent : "Memory Photo";
+      subText = byEl ? byEl.textContent : "";
     }
-    if (!src) return;
+
+    if (!src || src === 'none') return;
 
     img.src = src;
-    title.textContent = name ? name : "Photo";
-    sub.textContent = roll ? `Roll No: ${roll}` : "";
+    title.textContent = titleText;
+    sub.textContent = subText;
     openDialog("photoViewer");
   });
 }
