@@ -745,16 +745,21 @@ h2 {
   gap: 10px;
 }
 
-.remove-btn {
-  padding: 6px 12px;
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.remove-btn, .edit-btn {
+  padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid var(--faint);
   background: transparent;
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 800;
   cursor: pointer;
-  transition: background 150ms ease, color 150ms ease;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
 }
 
 .remove-btn:hover {
@@ -762,7 +767,14 @@ h2 {
   color: #fff;
 }
 
-.theme-toggle:checked+.app .remove-btn {
+.edit-btn:hover {
+  background: rgba(124, 92, 255, 0.15);
+  color: #fff;
+  border-color: rgba(124, 92, 255, 0.3);
+}
+
+.theme-toggle:checked+.app .remove-btn,
+.theme-toggle:checked+.app .edit-btn {
   border-color: rgba(20, 25, 35, 0.2);
   color: rgba(20, 25, 35, 0.8);
 }
@@ -770,6 +782,11 @@ h2 {
 .theme-toggle:checked+.app .remove-btn:hover {
   background: rgba(20, 25, 35, 0.08);
   color: var(--text);
+}
+
+.theme-toggle:checked+.app .edit-btn:hover {
+  background: rgba(124, 92, 255, 0.1);
+  color: rgba(124, 92, 255, 0.9);
 }
 
 .theme-toggle:checked+.app .icon-btn {
@@ -1470,9 +1487,10 @@ button.btn {
     border-radius: 16px;
     padding: 12px;
     gap: 6px;
-    background: var(--panel);
+    background: var(--bg);
     border: 1px solid var(--faint);
     box-shadow: var(--shadow);
+    z-index: 50;
   }
 
   .nav__toggle:checked~.nav__links a {
